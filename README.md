@@ -1,15 +1,15 @@
 # docker-compose-laravel
-A pretty simplified Docker Compose workflow that sets up a LEMP network of containers for local Laravel development. You can view the full article that inspired this repo [here](https://dev.to/aschmelyun/the-beauty-of-docker-for-local-laravel-development-13c0).
+一个相当简化的 Docker Compose 工作流程
 
 ## Usage
 
-To get started, make sure you have [Docker installed](https://docs.docker.com/docker-for-mac/install/) on your system, and then clone this repository.
+首先，请确保您的系统上 [安装了 Docker](https://docs.docker.com/docker-for-mac/install/) , 然后克隆此存储库。
 
-Next, navigate in your terminal to the directory you cloned this, and spin up the containers for the web server by running `docker-compose up -d --build app`.
+接下来，在终端中导航到您克隆的目录，并通过运行启动 Web 服务器的容器 `docker-compose up -d --build app`.
 
-After that completes, follow the steps from the [src/README.md](src/README.md) file to get your Laravel project added in (or create a new blank one).
+完成后，按照 [src/README.md](src/README.md) 文件中的步骤添加 Laravel 项目（或创建一个新的空白项目）。
 
-**Note**: Your MySQL database host name should be `mysql`, **not** `localhost`. The username and database should both be `homestead` with a password of `secret`. 
+**Note**: 您的 MySQL 数据库主机名应该是mysql，而不是 localhost。homestead用户名和数据库的密码都应为secret。
 
 Bringing up the Docker Compose network with `app` instead of just using `up`, ensures that only our site's containers are brought up at the start, instead of all of the command containers as well. The following are built for our web server, with their exposed ports detailed:
 
@@ -19,23 +19,23 @@ Bringing up the Docker Compose network with `app` instead of just using `up`, en
 - **redis** - `:6379`
 - **mailhog** - `:8025` 
 
-Three additional containers are included that handle Composer, NPM, and Artisan commands *without* having to have these platforms installed on your local computer. Use the following command examples from your project root, modifying them to fit your particular use case.
+其中包含三个附加容器，可处理 Composer、NPM 和 Artisan 命令，而无需在本地计算机上安装这些平台。使用项目根目录中的以下命令示例，修改它们以适合您的特定用例。
 
 - `docker-compose run --rm composer update`
 - `docker-compose run --rm npm run dev`
 - `docker-compose run --rm artisan migrate`
 
-## Permissions Issues
+## 权限问题
 
-If you encounter any issues with filesystem permissions while visiting your application or running a container command, try completing one of the sets of steps below.
+如果您在访问应用程序或运行容器命令时遇到文件系统权限的任何问题，请尝试完成以下一组步骤。
 
-**If you are using your server or local environment as the root user:**
+**如果您以 root 用户身份使用服务器或本地环境:**
 
 - Bring any container(s) down with `docker-compose down`
 - Replace any instance of `php.dockerfile` in the docker-compose.yml file with `php.root.dockerfile`
 - Re-build the containers by running `docker-compose build --no-cache`
 
-**If you are using your server or local environment as a user that is not root:**
+**如果您以非 root 用户身份使用服务器或本地环境:**
 
 - Bring any container(s) down with `docker-compose down`
 - In your terminal, run `export UID=$(id -u)` and then `export GID=$(id -g)`
@@ -44,9 +44,9 @@ If you encounter any issues with filesystem permissions while visiting your appl
 
 Then, either bring back up your container network or re-run the command you were trying before, and see if that fixes it.
 
-## Persistent MySQL Storage
+## MySQL 持久存储
 
-By default, whenever you bring down the Docker network, your MySQL data will be removed after the containers are destroyed. If you would like to have persistent data that remains after bringing containers down and back up, do the following:
+默认情况下，每当您关闭 Docker 网络时，您的 MySQL 数据都会在容器被销毁后被删除。如果您希望在关闭和备份容器后保留保留的持久数据，请执行以下操作：
 
 1. Create a `mysql` folder in the project root, alongside the `nginx` and `src` folders.
 2. Under the mysql service in your `docker-compose.yml` file, add the following lines:
@@ -56,13 +56,13 @@ volumes:
   - ./mysql:/var/lib/mysql
 ```
 
-## Usage in Production
+## 生产中的使用
 
-While I originally created this template for local development, it's robust enough to be used in basic Laravel application deployments. The biggest recommendation would be to ensure that HTTPS is enabled by making additions to the `nginx/default.conf` file and utilizing something like [Let's Encrypt](https://hub.docker.com/r/linuxserver/letsencrypt) to produce an SSL certificate.
+虽然我最初创建此模板是为了本地开发，但它足够强大，可以在基本的 Laravel 应用程序部署中使用。 The biggest recommendation would be to ensure that HTTPS is enabled by making additions to the `nginx/default.conf` file and utilizing something like [Let's Encrypt](https://hub.docker.com/r/linuxserver/letsencrypt) to produce an SSL certificate.
 
-## Compiling Assets
+## 编译资产
 
-This configuration should be able to compile assets with both [laravel mix](https://laravel-mix.com/) and [vite](https://vitejs.dev/). In order to get started, you first need to add ` --host 0.0.0.0` after the end of your relevant dev command in `package.json`. So for example, with a Laravel project using Vite, you should see:
+This configuration should be able to compile assets with both [laravel mix](https://laravel-mix.com/) and [vite](https://vitejs.dev/). In order to get started, you first need to add ` --host 0.0.0.0` after the end of your relevant dev command in `package.json`. 例如，对于使用 Vite 的 Laravel 项目，您应该看到:
 
 ```json
 "scripts": {
@@ -71,14 +71,14 @@ This configuration should be able to compile assets with both [laravel mix](http
 },
 ```
 
-Then, run the following commands to install your dependencies and start the dev server:
+然后，运行以下命令来安装依赖项并启动开发服务器：
 
 - `docker-compose run --rm npm install`
 - `docker-compose run --rm --service-ports npm run dev`
 
-After that, you should be able to use `@vite` directives to enable hot-module reloading on your local Laravel application.
+之后，您应该能够使用@vite指令在本地 Laravel 应用程序上启用热模块重新加载。
 
-Want to build for production? Simply run `docker-compose run --rm npm run build`.
+想要为生产而构建吗？只需运行即可 `docker-compose run --rm npm run build`.
 
 ## MailHog
 
