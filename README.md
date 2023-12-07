@@ -85,3 +85,11 @@ This configuration should be able to compile assets with both [laravel mix](http
 The current version of Laravel (9 as of today) uses MailHog as the default application for testing email sending and general SMTP work during local development. Using the provided Docker Hub image, getting an instance set up and ready is simple and straight-forward. The service is included in the `docker-compose.yml` file, and spins up alongside the webserver and database services.
 
 To see the dashboard and view any emails coming through the system, visit [localhost:8025](http://localhost:8025) after running `docker-compose up -d site`.
+
+
+#系统架构
+laravel-modules
+laravel-modules 是如何自动注册模块的服务的？
+生成模块时在配置文件src/modules_statuses.json中注册模块名称
+然后在下面的文件中使用模块名使用 laravel ioc 注入模块服务
+src/vendor/nwidart/laravel-modules/src/LaravelModulesServiceProvider.php
