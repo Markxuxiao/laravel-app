@@ -87,7 +87,7 @@ The current version of Laravel (9 as of today) uses MailHog as the default appli
 To see the dashboard and view any emails coming through the system, visit [localhost:8025](http://localhost:8025) after running `docker-compose up -d site`.
 
 
-#系统架构
+# 系统架构
 laravel-modules
 laravel-modules 是如何自动注册模块的服务的？
 生成模块时在配置文件src/modules_statuses.json中注册模块名称
